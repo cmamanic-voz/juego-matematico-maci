@@ -357,7 +357,7 @@ def main(page: ft.Page):
 
 
     # =========================================================================
-    # LÓGICA: JUEGO 2 (OPERACIÓN RELÁMPAGO) 
+    # LÓGICA: JUEGO 2 (OPERACIÓN RELÁMPAGO) - ¡ARREGLADO CORRECCIÓN DE CLICKS!
     # =========================================================================
     def mostrar_instrucciones_juego2():
         page.controls.clear()
@@ -393,9 +393,16 @@ def main(page: ft.Page):
         niv_data = estado["juego2_partida_actual"][estado["juego2_nivel"]]
         
         row_botones = ft.Column(horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
+        # CORRECCIÓN AQUÍ: opt=opcion captura el valor exacto del bucle en cada botón
         for opcion in niv_data["opciones"]:
             row_botones.controls.append(
-                ft.ElevatedButton(opcion, on_click=lambda e, opt=opcion: presionar_opcion_juego2(opt), width=280, bgcolor="grey900", color="white")
+                ft.ElevatedButton(
+                    opcion, 
+                    on_click=lambda e, opt=opcion: presionar_opcion_juego2(opt), 
+                    width=280, 
+                    bgcolor="grey900", 
+                    color="white"
+                )
             )
 
         dif_tag = "Normal" if niv_data["tiempo"] == 15 else "Complicadito 🔥"
