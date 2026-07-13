@@ -16,7 +16,6 @@ class BancoDatosJuegos:
             {"numeros": "[6, 2, 8, 8]", "objetivo": 16, "opciones": ["(6 × 2) + 8", "(6 ÷ 2) × 8 - 8", "(6 - 2) + 8", "(6 + 2) × 2"], "correcta": "(6 ÷ 2) × 8 - 8", "tiempo": 15},
             {"numeros": "[10, 5, 4, 3]", "objetivo": 9, "opciones": ["(10 ÷ 5) + 4 + 3", "(10 - 5) × 4", "(10 ÷ 5) × 3 + 3", "(10 + 5) - 4 - 2"], "correcta": "(10 ÷ 5) + 4 + 3", "tiempo": 15},
             {"numeros": "[4, 4, 4, 4]", "objetivo": 0, "opciones": ["(4 + 4) - (4 + 4)", "(4 × 4) ÷ 4", "(4 - 4) × 4", "4 + 4 - 4"], "correcta": "(4 + 4) - (4 + 4)", "tiempo": 15},
-            # ¡CORREGIDO AQUÍ! El objetivo real es 24 para que la operación (7x3)+2+1 cuadre perfectamente
             {"numeros": "[7, 3, 2, 1]", "objetivo": 24, "opciones": ["(7 × 3) + 2", "(7 + 3) × 2 + 3", "(7 × 3) + 2 + 1", "(7 - 3) × 5"], "correcta": "(7 × 3) + 2 + 1", "tiempo": 15},
             {"numeros": "[12, 4, 2, 5]", "objetivo": 10, "opciones": ["(12 ÷ 4) + 2 + 5", "(12 - 4) + 2", "(12 × 4) ÷ 8", "(12 + 4) ÷ 2"], "correcta": "(12 ÷ 4) + 2 + 5", "tiempo": 15}
         ]
