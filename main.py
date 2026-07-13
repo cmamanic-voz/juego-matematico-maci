@@ -9,7 +9,7 @@ class JuegoMatematico:
         self.num_jugadores = 2
         self.jugador_actual_idx = 0
         self.pregunta_actual_num = 1
-        self.total_preguntas = 10
+        self.total_questions = 10
         
         # Datos de la pregunta activa
         self.respuesta_correcta = 0
@@ -22,7 +22,6 @@ class JuegoMatematico:
         tipo = random.choice(["ecuacion", "combinada", "potencia"])
         
         if tipo == "ecuacion":
-            # Formato: ax + b = c -> Hallar x
             x = random.randint(1, 10)
             a = random.randint(2, 5)
             b = random.randint(1, 15)
@@ -31,7 +30,6 @@ class JuegoMatematico:
             return texto, x
             
         elif tipo == "combinada":
-            # Formato: a * (b - c) + d
             a = random.randint(2, 5)
             b = random.randint(5, 12)
             c = random.randint(1, 4)
@@ -41,7 +39,6 @@ class JuegoMatematico:
             return texto, res
             
         else:
-            # Formato: a^2 + b o raíces simples
             a = random.choice([2, 3, 4, 5])
             b = random.randint(5, 20)
             texto = f"Calcula la potencia:\n{a}² + {b}"
@@ -59,7 +56,7 @@ def main(page: ft.Page):
     juego = JuegoMatematico()
 
     # Componentes visuales reutilizables
-    titulo = ft.Text("🏆 MATH SHOWDOWN 🏆", size=28, weight=ft.FontWeight.BOLD, color=ft.colors.CYAN)
+    titulo = ft.Text("🏆 MATH SHOWDOWN 🏆", size=28, weight=ft.FontWeight.BOLD, color="cyan")
     instrucciones = ft.Text("Selecciona la cantidad de competidores:", size=16)
     
     dropdown_jugadores = ft.Dropdown(
@@ -74,9 +71,9 @@ def main(page: ft.Page):
 
     lista_inputs = ft.Column(horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     txt_ejercicio = ft.Text("", size=24, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
-    txt_turno = ft.Text("", size=18, color=ft.colors.AMBER, weight=ft.FontWeight.BOLD)
-    txt_progreso = ft.Text("", size=14, color=ft.colors.GREY_400)
-    txt_timer = ft.Text("", size=20, weight=ft.FontWeight.BOLD, color=ft.colors.RED_ACCENT)
+    txt_turno = ft.Text("", size=18, color="amber", weight=ft.FontWeight.BOLD)
+    txt_progreso = ft.Text("", size=14, color="grey")
+    txt_timer = ft.Text("", size=20, weight=ft.FontWeight.BOLD, color="red")
     
     input_respuesta = ft.TextField(
         label="Tu respuesta aquí", 
@@ -85,7 +82,7 @@ def main(page: ft.Page):
         keyboard_type=ft.KeyboardType.NUMBER
     )
     
-    progreso_barra = ft.ProgressBar(width=300, visible=False, color=ft.colors.CYAN)
+    progreso_barra = ft.ProgressBar(width=300, visible=False, color="cyan")
     txt_cargando = ft.Text("Cargando resultados finales...", visible=False, size=16, italic=True)
 
     async def iniciar_timer():
@@ -96,7 +93,6 @@ def main(page: ft.Page):
             await asyncio.sleep(1)
             juego.tiempo_restante -= 1
         
-        # Si llega a 0 sin responder
         input_respuesta.disabled = True
         page.update()
         await asyncio.sleep(1)
@@ -110,7 +106,7 @@ def main(page: ft.Page):
                 ft.TextField(label=f"Nombre del Jugador {i+1}", width=250, value=f"Jugador {i+1}")
             )
         
-        btn_comenzar = ft.ElevatedButton("¡Empezar Batalla!", on_click=comenzar_juego, bgcolor=ft.colors.GREEN_700, color=ft.colors.WHITE)
+        btn_comenzar = ft.ElevatedButton("¡Empezar Batalla!", on_click=comenzar_juego, bgcolor="green", color="white")
         
         page.controls.clear()
         page.add(
@@ -141,8 +137,8 @@ def main(page: ft.Page):
         juego.respuesta_correcta = res
         
         txt_turno.value = f"🎯 Turno de: {jugador['nombre']}"
-        txt_progreso.value = f"Ejercicio {juego.pregunta_actual_num} de {juego.total_preguntas}"
-        txt_ejercicio.value = text=texto
+        txt_progreso.value = f"Ejercicio {juego.pregunta_actual_num} de {juego.total_questions}"
+        txt_ejercicio.value = texto
         input_respuesta.value = ""
         input_respuesta.disabled = False
         
@@ -161,7 +157,7 @@ def main(page: ft.Page):
             txt_timer,
             ft.Row([input_respuesta], alignment=ft.MainAxisAlignment.CENTER),
             ft.VerticalDivider(height=15),
-            ft.ElevatedButton("Enviar Respuesta", on_click=lambda _: asyncio.run(procesar_respuesta()), bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE)
+            ft.ElevatedButton("Enviar Respuesta", on_click=lambda _: asyncio.run(procesar_respuesta()), bgcolor="blue", color="white")
         )
         page.update()
         juego.tiempo_inicio_pregunta = time.time()
@@ -178,7 +174,6 @@ def main(page: ft.Page):
             try:
                 ans = int(input_respuesta.value)
                 if ans == juego.respuesta_correcta:
-                    # Sistema de puntos Pro por velocidad
                     if tiempo_empleado <= 5:
                         jugador["puntos"] += 3
                     else:
@@ -186,28 +181,24 @@ def main(page: ft.Page):
                 else:
                     jugador["puntos"] -= 1
             except ValueError:
-                jugador["puntos"] -= 1  # Mal o vacío cuenta como error
+                jugador["puntos"] -= 1
 
-        # Avanzar en la estructura continua
-        if juego.pregunta_actual_num < juego.total_preguntas:
+        if juego.pregunta_actual_num < juego.total_questions:
             juego.pregunta_actual_num += 1
             cargar_pregunta()
         else:
-            # Terminó sus 10 preguntas, ¿hay siguiente jugador?
             if juego.jugador_actual_idx < len(juego.jugadores) - 1:
                 juego.jugador_actual_idx += 1
                 juego.pregunta_actual_num = 1
-                # Pantalla de transición limpia
                 page.controls.clear()
                 page.add(
-                    ft.Text("¡Tiempo Completado!", size=24, color=ft.colors.GREEN_400, weight=ft.FontWeight.BOLD),
+                    ft.Text("¡Ronda Completada!", size=24, color="green", weight=ft.FontWeight.BOLD),
                     ft.Text(f"Siguiente turno para: {juego.jugadores[juego.jugador_actual_idx]['nombre']}", size=18),
                     ft.VerticalDivider(height=30),
-                    ft.ElevatedButton("Listo, ¡A jugar!", on_click=lambda _: cargar_pregunta())
+                    ft.ElevatedButton("Listo, ¡A jugar!", on_click=lambda _: cargar_pregunta(), bgcolor="blue", color="white")
                 )
                 page.update()
             else:
-                # ¡TODOS TERMINARON! Pantalla de suspenso solicitada
                 await mostrar_pantalla_carga()
 
     async def mostrar_pantalla_carga():
@@ -222,27 +213,25 @@ def main(page: ft.Page):
         )
         page.update()
         
-        # Efecto dramático de carga (3 segundos)
         await asyncio.sleep(3)
         mostrar_resultados_finales()
 
     def mostrar_resultados_finales():
-        # Ordenar jugadores de mayor a menor puntaje (Orden de mérito)
         ranking = sorted(juego.jugadores, key=lambda k: k['puntos'], reverse=True)
-        
         tabla_posiciones = ft.Column(horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=15)
         
         iconos = ["🥇", "🥈", "🥉", "👤"]
         for idx, jug in enumerate(ranking):
             ico = iconos[idx] if idx < len(iconos) else "👤"
+            bg = "surfacevariant" if idx == 0 else "black26"
             tabla_posiciones.controls.append(
                 ft.Container(
                     content=ft.Row([
                         ft.Text(f"{ico} {idx+1}°. {jug['nombre']}", size=18, weight=ft.FontWeight.BOLD),
-                        ft.Text(f"{jug['puntos']} Pts", size=18, color=ft.colors.CYAN_200, weight=ft.FontWeight.BOLD)
+                        ft.Text(f"{jug['puntos']} Pts", size=18, color="cyan", weight=ft.FontWeight.BOLD)
                     ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                     width=320,
-                    bgcolor=ft.colors.SURFACE_VARIANT if idx == 0 else ft.colors.BLACK26,
+                    bgcolor=bg,
                     padding=15,
                     border_radius=10
                 )
@@ -250,11 +239,11 @@ def main(page: ft.Page):
 
         page.controls.clear()
         page.add(
-            ft.Text("📊 ORDEN DE MÉRITO FINAL 📊", size=24, weight=ft.FontWeight.BOLD, color=ft.colors.AMBER),
+            ft.Text("📊 ORDEN DE MÉRITO FINAL 📊", size=24, weight=ft.FontWeight.BOLD, color="amber"),
             ft.VerticalDivider(height=20),
             tabla_posiciones,
             ft.VerticalDivider(height=30),
-            ft.ElevatedButton("Reiniciar Todo", on_click=lambda _: reiniciar_todo(), bgcolor=ft.colors.RED_700, color=ft.colors.WHITE)
+            ft.ElevatedButton("Reiniciar Todo", on_click=lambda _: reiniciar_todo(), bgcolor="red", color="white")
         )
         page.update()
 
@@ -262,17 +251,16 @@ def main(page: ft.Page):
         nonlocal juego
         juego = JuegoMatematico()
         page.controls.clear()
-        page.add(titulo, instrucciones, dropdown_jugadores, ft.ElevatedButton("Configurar Equipos", on_click=mostrar_pantalla_nombres))
+        page.add(titulo, instrucciones, dropdown_jugadores, ft.ElevatedButton("Configurar Equipos", on_click=mostrar_pantalla_nombres, bgcolor="blue", color="white"))
         page.update()
 
-    # Pantalla Inicial
     page.add(
         titulo,
         ft.VerticalDivider(height=20),
         instrucciones,
         dropdown_jugadores,
         ft.VerticalDivider(height=10),
-        ft.ElevatedButton("Configurar Equipos", on_click=mostrar_pantalla_nombres, bgcolor=ft.colors.BLUE_700, color=ft.colors.WHITE)
+        ft.ElevatedButton("Configurar Equipos", on_click=mostrar_pantalla_nombres, bgcolor="blue", color="white")
     )
     page.update()
 
