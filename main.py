@@ -4,57 +4,68 @@ import time
 import asyncio
 
 # =========================================================================
-# CLASE: BANCO DE DATOS DEL SISTEMA
+# CLASE: BANCO DE DATOS DEL SISTEMA (DINÁMICO Y AMPLIADO)
 # =========================================================================
 class BancoDatosJuegos:
     def __init__(self):
-        # BANCO DE DATOS FIXED: JUEGO 2 (OPERACIÓN RELÁMPAGO)
-        self.juego2_niveles = [
-            {
-                "numeros": "[8, 4, 2, 6]",
-                "objetivo": 10,
-                "opciones": ["(8 ÷ 4) + 2 + 6", "(8 - 4) × 2 + 6", "(8 × 4) ÷ 2 - 6", "(8 + 4) - 2 - 6"],
-                "correcta": "(8 ÷ 4) + 2 + 6"
-            },
-            {
-                "numeros": "[5, 3, 4, 2]",
-                "objetivo": 32,
-                "opciones": ["(5 × 3) + 4 - 2", "(5 + 3) × (4 ÷ 2)", "(5 + 3) × 4", "(5 - 3) × 4 × 2"],
-                "correcta": "(5 + 3) × 4" 
-            },
-            {
-                "numeros": "[9, 3, 5, 2]",
-                "objetivo": 20,
-                "opciones": ["(9 × 3) - 5 - 2", "(9 ÷ 3) × 5 + 5", "(9 + 3) × 2 - 4", "(9 ÷ 3) × 5 + 5"],
-                "correcta": "(9 ÷ 3) × 5 + 5"
-            },
-            {
-                "numeros": "[12, 4, 6, 2]",
-                "objetivo": 48,
-                "opciones": ["(12 - 4) × 6", "(12 ÷ 4) × 6 × 2", "(12 + 4) × (6 - 2)", "(12 × 4) ÷ 2"],
-                "correcta": "(12 - 4) × 6"
-            },
-            {
-                "numeros": "[7, 5, 4, 2]",
-                "objetivo": 39,
-                "opciones": ["(7 × 5) + 4,0", "(7 × 5) + 4 + 2", "(7 × 5) + 4 - 2", "(7 + 5) × 4 - 2"],
-                "correcta": "(7 × 5) + 4 - 2"
-            }
+        # BANCO DE DATOS JUEGO 2: 15 NIVELES CORREGIDOS Y VERIFICADOS
+        self.juego2_normales = [
+            {"numeros": "[8, 4, 2, 6]", "objetivo": 10, "opciones": ["(8 ÷ 4) + 2 + 6", "(8 - 4) × 2 + 6", "(8 × 4) ÷ 2 - 6", "(8 + 4) - 2 - 6"], "correcta": "(8 ÷ 4) + 2 + 6", "tiempo": 15},
+            {"numeros": "[5, 3, 4, 2]", "objetivo": 32, "opciones": ["(5 × 3) + 4 - 2", "(5 + 3) × (4 ÷ 2)", "(5 + 3) × 4", "(5 - 3) × 4 × 2"], "correcta": "(5 + 3) × 4", "tiempo": 15},
+            {"numeros": "[9, 3, 5, 2]", "objetivo": 13, "opciones": ["(9 × 3) - 5", "(9 ÷ 3) + 5 × 2", "(9 + 3) × 2", "(9 - 3) × 2"], "correcta": "(9 ÷ 3) + 5 × 2", "tiempo": 15},
+            {"numeros": "[6, 2, 8, 8]", "objetivo": 16, "opciones": ["(6 × 2) + 8", "(6 ÷ 2) × 8 - 8", "(6 - 2) + 8", "(6 + 2) × 2"], "correcta": "(6 ÷ 2) × 8 - 8", "tiempo": 15},
+            {"numeros": "[10, 5, 4, 3]", "objetivo": 9, "opciones": ["(10 ÷ 5) + 4 + 3", "(10 - 5) × 4", "(10 ÷ 5) × 3 + 3", "(10 + 5) - 4 - 2"], "correcta": "(10 ÷ 5) + 4 + 3", "tiempo": 15},
+            {"numeros": "[4, 4, 4, 4]", "objetivo": 0, "opciones": ["(4 + 4) - (4 + 4)", "(4 × 4) ÷ 4", "(4 - 4) × 4", "4 + 4 - 4"], "correcta": "(4 + 4) - (4 + 4)", "tiempo": 15},
+            {"numeros": "[7, 3, 2, 1]", "objetivo": 23, "opciones": ["(7 × 3) + 2", "(7 + 3) × 2 + 3", "(7 × 3) + 2 + 1", "(7 - 3) × 5"], "correcta": "(7 × 3) + 2 + 1", "tiempo": 15},
+            {"numeros": "[12, 4, 2, 5]", "objetivo": 10, "opciones": ["(12 ÷ 4) + 2 + 5", "(12 - 4) + 2", "(12 × 4) ÷ 8", "(12 + 4) ÷ 2"], "correcta": "(12 ÷ 4) + 2 + 5", "tiempo": 15}
+        ]
+        
+        self.juego2_dificiles = [
+            {"numeros": "[12, 4, 6, 2]", "objetivo": 48, "opciones": ["(12 - 4) × 6", "(12 - 4) × (6 ÷ 2) × 2", "(12 + 4) × (6 - 2)", "(12 × 4) ÷ 2"], "correcta": "(12 - 4) × (6 ÷ 2) × 2", "tiempo": 20},
+            {"numeros": "[7, 5, 4, 2]", "objetivo": 35, "opciones": ["(7 × 5) + 4 - 4", "(7 × 5) × (4 - 2) ÷ 2", "(7 + 5) × 3", "(7 × 5) ÷ (4 - 2)"], "correcta": "(7 × 5) × (4 - 2) ÷ 2", "tiempo": 20},
+            {"numeros": "[9, 9, 3, 5]", "objetivo": 32, "opciones": ["(9 × 9) ÷ 3", "(9 + 9) + 3 × 5", "(9 ÷ 3) × 9 + 5", "(9 - 3) × 5 + 2"], "correcta": "(9 ÷ 3) × 9 + 5", "tiempo": 20},
+            {"numeros": "[15, 3, 8, 1]", "objetivo": 40, "opciones": ["(15 ÷ 3) × 8 × 1", "(15 - 3) × 3", "(15 + 5) × 2", "(15 × 2) + 10"], "correcta": "(15 ÷ 3) × 8 × 1", "tiempo": 20},
+            {"numeros": "[6, 6, 6, 3]", "objetivo": 39, "opciones": ["(6 × 6) + 6 - 3", "(6 + 6) × 3 + 3", "(6 × 6) ÷ 3", "(6 - 3) × 12"], "correcta": "(6 × 6) + 6 - 3", "tiempo": 20},
+            {"numeros": "[20, 5, 10, 2]", "objetivo": 9, "opciones": ["(20 ÷ 5) + 10 ÷ 2", "(20 - 10) ÷ 2", "(20 ÷ 5) × 2", "(20 + 10) ÷ 3"], "correcta": "(20 ÷ 5) + 10 ÷ 2", "tiempo": 20},
+            {"numeros": "[8, 8, 4, 4]", "objetivo": 60, "opciones": ["(8 × 8) - 4", "(8 + 8) × 4 - 4", "(8 × 8) - 40", "(8 - 2) × 10"], "correcta": "(8 + 8) × 4 - 4", "tiempo": 20}
         ]
 
-        # BANCO DE DATOS FIXED: JUEGO 3 (ADIVINA EL PATRÓN)
-        self.juego3_niveles = [
-            {"sucesion": "4,  9,  14,  19,  ¿__?", "respuesta": 24},
-            {"sucesion": "3,  6,  12,  24,  ¿__?", "respuesta": 48},
-            {"sucesion": "1,  4,  9,  16,  ¿__?", "respuesta": 25},
-            {"sucesion": "1,  1,  2,  3,  5,  8,  ¿__?", "respuesta": 13},
-            {"sucesion": "2,  4,  5,  10,  11,  ¿__?", "respuesta": 22}
+        # BANCO DE DATOS JUEGO 3: 15 NIVELES COMPROBADOS
+        self.juego3_normales = [
+            {"sucesion": "4,  9,  14,  19,  ¿__?", "respuesta": 24, "dif": "Normal"},
+            {"sucesion": "3,  6,  12,  24,  ¿__?", "respuesta": 48, "dif": "Normal"},
+            {"sucesion": "1,  4,  9,  16,  ¿__?", "respuesta": 25, "dif": "Normal"},
+            {"sucesion": "5,  8,  11,  14,  ¿__?", "respuesta": 17, "dif": "Normal"},
+            {"sucesion": "40,  35,  30,  25,  ¿__?", "respuesta": 20, "dif": "Normal"},
+            {"sucesion": "2,  6,  10,  14,  ¿__?", "respuesta": 18, "dif": "Normal"},
+            {"sucesion": "1,  3,  9,  27,  ¿__?", "respuesta": 81, "dif": "Normal"},
+            {"sucesion": "50,  44,  38,  32,  ¿__?", "respuesta": 26, "dif": "Normal"}
+        ]
+        
+        self.juego3_dificiles = [
+            {"sucesion": "1,  1,  2,  3,  5,  8,  ¿__?", "respuesta": 13, "dif": "Complicadito 🔥"},
+            {"sucesion": "2,  4,  5,  10,  11,  ¿__?", "respuesta": 22, "dif": "Complicadito 🔥"},
+            {"sucesion": "1,  2,  4,  7,  11,  ¿__?", "respuesta": 16, "dif": "Complicadito 🔥"},
+            {"sucesion": "3,  4,  6,  9,  13,  ¿__?", "respuesta": 18, "dif": "Complicadito 🔥"},
+            {"sucesion": "2,  6,  12,  20,  30,  ¿__?", "respuesta": 42, "dif": "Complicadito 🔥"},
+            {"sucesion": "27,  25,  21,  15,  ¿__?", "respuesta": 7, "dif": "Complicadito 🔥"},
+            {"sucesion": "2,  3,  5,  7,  11,  ¿__?", "respuesta": 13, "dif": "Complicadito 🔥"}
         ]
 
     def generar_pregunta_juego1(self):
         a = random.randint(2, 9)
         b = random.randint(5, 25)
         return f"Calcula:\n{a}² + {b}", (a**2) + b
+
+    def generar_partida_juego2(self):
+        partida_normales = random.sample(self.juego2_normales, 3)
+        partida_dificiles = random.sample(self.juego2_dificiles, 2)
+        return partida_normales + partida_dificiles
+
+    def generar_partida_juego3(self):
+        partida_normales = random.sample(self.juego3_normales, 3)
+        partida_dificiles = random.sample(self.juego3_dificiles, 2)
+        return partida_normales + partida_dificiles
 
 
 # =========================================================================
@@ -70,7 +81,6 @@ def main(page: ft.Page):
 
     bd = BancoDatosJuegos()
 
-    # DICCIONARIO DE ESTADO GLOBAL
     estado = {
         "juego_activo": 0, 
         "tiempo_reloj": 0,
@@ -82,28 +92,25 @@ def main(page: ft.Page):
         "juego1_correcta": 0,
         "juego1_inicio_t": 0,
         
+        "juego2_partida_actual": [],
         "juego2_nivel": 0,
         "juego2_puntos": 0,
         
+        "juego3_partida_actual": [],
         "juego3_nivel": 0,
         "juego3_puntos": 0
     }
 
-    # TEXTOS DE RELOJ REUTILIZABLES
     txt_j1_reloj = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color="red")
     txt_j2_reloj = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color="red")
     txt_j3_reloj = ft.Text("", size=22, weight=ft.FontWeight.BOLD, color="red")
 
-    # =========================================================================
-    # MOTOR ASÍNCRONO PERFECTO
-    # =========================================================================
     def parar_reloj_global():
         estado["tiempo_reloj"] = -1
         estado["token_reloj"] += 1 
 
     def arrancar_reloj_global(segundos, juego_num):
         parar_reloj_global() 
-        
         estado["tiempo_reloj"] = segundos
         estado["juego_activo"] = juego_num
         
@@ -163,7 +170,7 @@ def main(page: ft.Page):
         page.add(
             ft.Container(height=10),
             ft.Text("🏛️ OLIMPÍADA MATEMÁTICA", size=26, weight=ft.FontWeight.BOLD, color="amber"),
-            ft.Text("Suite del Proyecto Final - Edición Adrenalina", size=13, italic=True, color="grey400"),
+            ft.Text("✨ ¡Disfruta de las matemáticas! ✨", size=14, italic=True, color="cyan200"),
             ft.Container(height=20),
 
             ft.Container(
@@ -180,7 +187,7 @@ def main(page: ft.Page):
                 content=ft.Column([
                     ft.Text("⚡ 2. OPERACIÓN RELÁMPAGO", size=16, weight=ft.FontWeight.BOLD, color="green"),
                     ft.Image(src="relampago.png", width=140, height=80, fit="contain", error_content=ft.Text("🖼️ [Imagen: relampago.png]", color="grey")),
-                    ft.ElevatedButton("Desafío Veloz (10s por Nivel)", on_click=lambda _: mostrar_instrucciones_juego2(), bgcolor="green700", color="white")
+                    ft.ElevatedButton("Desafío Dinámico (15s - 20s)", on_click=lambda _: mostrar_instrucciones_juego2(), bgcolor="green700", color="white")
                 ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                 bgcolor="black26", padding=12, border_radius=10, border=ft.Border.all(1, "grey800"), width=340
             ),
@@ -286,7 +293,6 @@ def main(page: ft.Page):
             ft.Container(height=15),
             ft.ElevatedButton("Enviar rápido", on_click=lambda _: procesar_click_juego1(), bgcolor="blue", color="white"),
             ft.Container(height=15),
-            # BOTÓN SALIR ADICIONADO
             ft.TextButton("🏳️ Salir del Juego", on_click=lambda _: mostrar_menu_principal(), style=ft.ButtonStyle(color="red400"))
         )
         page.update()
@@ -351,7 +357,7 @@ def main(page: ft.Page):
 
 
     # =========================================================================
-    # LÓGICA: JUEGO 2 (OPERACIÓN RELÁMPAGO)
+    # LÓGICA: JUEGO 2 (OPERACIÓN RELÁMPAGO) 
     # =========================================================================
     def mostrar_instrucciones_juego2():
         page.controls.clear()
@@ -361,11 +367,12 @@ def main(page: ft.Page):
             ft.Container(height=20),
             ft.Container(
                 content=ft.Column([
-                    ft.Text("• Verás un grupo de 4 números y un gran OBJETIVO en color ámbar.", size=14),
-                    ft.Text("• Abajo aparecerán 4 botones con diferentes combinaciones matemáticas.", size=14),
-                    ft.Text("• Debes identificar la opción que use correctamente los signos y paréntesis para llegar exactamente al número objetivo.", size=14),
-                    ft.Text("• ¡ADRENALINA! Tienes solo 10 segundos por nivel.", size=14, weight=ft.FontWeight.BOLD, color="red300"),
-                    ft.Text("• Acierto: +20 Pts | Error: -5 Pts | Si el tiempo llega a cero: -10 Pts y saltas de nivel.", size=14, color="grey400"),
+                    ft.Text("• El juego elegirá 5 niveles aleatorios de un banco de 15 ejercicios.", size=14),
+                    ft.Text("• Encontrarás 2 dificultades: Niveles Normales y Complicaditos.", size=14, weight=ft.FontWeight.BOLD, color="cyan200"),
+                    ft.Text("• Nivel Normal: Tendrás 15 segundos para responder.", size=14, color="green200"),
+                    ft.Text("• Nivel Complicadito: Tendrás 20 segundos para responder.", size=14, color="amber200"),
+                    ft.Text("• Identifica la combinación matemática correcta antes de que expire el tiempo.", size=14),
+                    ft.Text("• Acierto: +20 Pts | Error: -5 Pts | Sin tiempo: -10 Pts.", size=14, color="grey400"),
                 ], spacing=10),
                 bgcolor="black26", padding=20, border_radius=10, border=ft.Border.all(1, "grey800")
             ),
@@ -378,11 +385,12 @@ def main(page: ft.Page):
     def iniciar_juego2():
         estado["juego2_nivel"] = 0
         estado["juego2_puntos"] = 0
+        estado["juego2_partida_actual"] = bd.generar_partida_juego2()
         cargar_nivel_juego2()
 
     def cargar_nivel_juego2():
         parar_reloj_global()
-        niv_data = bd.juego2_niveles[estado["juego2_nivel"]]
+        niv_data = estado["juego2_partida_actual"][estado["juego2_nivel"]]
         
         row_botones = ft.Column(horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=10)
         for opcion in niv_data["opciones"]:
@@ -390,10 +398,12 @@ def main(page: ft.Page):
                 ft.ElevatedButton(opcion, on_click=lambda e, opt=opcion: presionar_opcion_juego2(opt), width=280, bgcolor="grey900", color="white")
             )
 
+        dif_tag = "Normal" if niv_data["tiempo"] == 15 else "Complicadito 🔥"
+
         page.controls.clear()
         page.add(
             ft.Text("⚡ OPERACIÓN RELÁMPAGO", size=20, weight=ft.FontWeight.BOLD, color="green"),
-            ft.Text(f"Nivel {estado['juego2_nivel'] + 1} de 5", size=14, color="grey"),
+            ft.Text(f"Desafío {estado['juego2_nivel'] + 1} de 5 | Modo: {dif_tag}", size=14, color="grey400"),
             ft.Container(height=10),
             txt_j2_reloj,
             ft.Container(height=5),
@@ -409,18 +419,17 @@ def main(page: ft.Page):
             ft.Container(height=15),
             ft.Text(f"Puntaje acumulado: {estado['juego2_puntos']} Pts", size=14),
             ft.Container(height=10),
-            # BOTÓN SALIR ADICIONADO
             ft.TextButton("🏳️ Salir del Juego", on_click=lambda _: mostrar_menu_principal(), style=ft.ButtonStyle(color="red400"))
         )
         page.update()
-        arrancar_reloj_global(10, juego_num=2)
+        arrancar_reloj_global(niv_data["tiempo"], juego_num=2)
 
     def presionar_opcion_juego2(opt):
         parar_reloj_global()
-        evaluar_juego2(opcion_seleccionada=opt, timeout=False)
+        evaluar_juego2(opt, timeout=False)
 
     def evaluar_juego2(opcion_seleccionada, timeout=False):
-        niv_data = bd.juego2_niveles[estado["juego2_nivel"]]
+        niv_data = estado["juego2_partida_actual"][estado["juego2_nivel"]]
         if not timeout:
             if opcion_seleccionada == niv_data["correcta"]:
                 estado["juego2_puntos"] += 20
@@ -447,9 +456,9 @@ def main(page: ft.Page):
             ft.Container(height=20),
             ft.Container(
                 content=ft.Column([
-                    ft.Text("• Verás una sucesión o secuencia de números en la pantalla.", size=14),
-                    ft.Text("• Analiza lógicamente el comportamiento (¿se suma?, ¿se multiplica?, ¿son potencias?, ¿Fibonacci?).", size=14),
-                    ft.Text("• Descubre la regla y escribe rápidamente el número entero que falta en el recuadro.", size=14),
+                    ft.Text("• El sistema elegirá 5 sucesiones al azar de un banco de 15 ejercicios.", size=14),
+                    ft.Text("• Analiza lógicamente el comportamiento de los números en pantalla.", size=14),
+                    ft.Text("• Escribe rápidamente el número entero que falta en el recuadro.", size=14),
                     ft.Text("• ¡MÁXIMA PRESIÓN! Solo tienes 10 segundos por nivel.", size=14, weight=ft.FontWeight.BOLD, color="red300"),
                     ft.Text("• Acierto: +20 Pts | Error: -5 Pts | Si expira el tiempo: -10 Pts.", size=14, color="grey400"),
                 ], spacing=10),
@@ -466,17 +475,18 @@ def main(page: ft.Page):
     def iniciar_juego3():
         estado["juego3_nivel"] = 0
         estado["juego3_puntos"] = 0
+        estado["juego3_partida_actual"] = bd.generar_partida_juego3()
         cargar_nivel_juego3()
 
     def cargar_nivel_juego3():
         parar_reloj_global()
-        niv_data = bd.juego3_niveles[estado["juego3_nivel"]]
+        niv_data = estado["juego3_partida_actual"][estado["juego3_nivel"]]
         in_j3_res.value = ""
 
         page.controls.clear()
         page.add(
             ft.Text("🔮 ADIVINA EL PATRÓN", size=20, weight=ft.FontWeight.BOLD, color="purple"),
-            ft.Text(f"Nivel {estado['juego3_nivel'] + 1} de 5", size=14, color="grey"),
+            ft.Text(f"Nivel {estado['juego3_nivel'] + 1} de 5 | Dificultad: {niv_data['dif']}", size=14, color="grey"),
             ft.Container(height=10),
             txt_j3_reloj,
             ft.Container(height=10),
@@ -492,7 +502,6 @@ def main(page: ft.Page):
             ft.Container(height=15),
             ft.Text(f"Puntaje acumulado: {estado['juego3_puntos']} Pts", size=14),
             ft.Container(height=10),
-            # BOTÓN SALIR ADICIONADO
             ft.TextButton("🏳️ Salir del Juego", on_click=lambda _: mostrar_menu_principal(), style=ft.ButtonStyle(color="red400"))
         )
         page.update()
@@ -503,7 +512,7 @@ def main(page: ft.Page):
         evaluar_juego3(timeout=False)
 
     def evaluar_juego3(timeout=False):
-        niv_data = bd.juego3_niveles[estado["juego3_nivel"]]
+        niv_data = estado["juego3_partida_actual"][estado["juego3_nivel"]]
         if not timeout:
             try:
                 ans = int(in_j3_res.value)
