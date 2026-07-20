@@ -583,4 +583,4 @@ def main(page: ft.Page):
 
     mostrar_menu_principal()
 
-ft.app(target=main, assets_dir="assets")
+ft.app(target=main, view=ft.AppView.WEB_BROWSER, assets_dir="juegocausa/assets", port=8000)
